@@ -1,14 +1,15 @@
 import tkinter as tk
 import random
+import math
 
 personas = []
 numeropersonas = 20
 class Persona:
     def __init__(self):
-        self.posx = random.randint (0,1024)
-        self.posy = random.randint (0,1024)
+        self.posx = random.randint(0,1024)
+        self.posy = random.randint(0,1024)
         self.radio = 30
-        self.direccion = 0
+        self.direccion = random.randint(0,360)
         self.color = "blue"
         self.entidad = ""
     def dibuja(self):
@@ -19,24 +20,40 @@ class Persona:
             self.posy+self.radio/2,
             fill=self.color)
     def mueve(self):
-        lienzo.move(self.entidad,5,0)
+        self.colisiona()
+        lienzo.move(
+            self.entidad,
+            math.cos(self.direccion),
+            math.sin(self.direccion))
+        self.posx += math.cos(self.direccion)
+        self.posy += math.sin(self.direccion)
+    def colisiona(self):
+        if self.posx < 0 or self.posx > 1024 or self.posy < 0 or self.posy > 1024:
+            self.direccion += math.pi
+            
 # Creo una ventana
 raiz = tk.Tk()
+
 # En la ventana creo un lienzo
 lienzo = tk.Canvas(width=1024,height=1024)
 lienzo.pack()
+
 # en la coleccion introduzco instncias de personas
 for i in range(0,numeropersonas):
     personas.append(Persona())
+    
 # Para cada una de las personas en la coleccion las pinto
 for persona in personas:
     persona.dibuja()
+    
 # Creo un bucle repetitivo    
 def bucle():
+    
 # Para cada persona en la coleccion la muevo
     for persona in personas:   
         persona.mueve()
-    raiz.after(1000,bucle)
+    raiz.after(10,bucle)
+    
 # Ejecuto el bucle
 bucle()
 
