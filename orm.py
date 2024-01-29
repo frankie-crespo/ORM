@@ -1,9 +1,11 @@
 import tkinter as tk
 import random
 import math
+import json
 
 personas = []
 numeropersonas = 20
+
 class Persona:
     def __init__(self):
         self.posx = random.randint(0,1024)
@@ -31,13 +33,20 @@ class Persona:
         if self.posx < 0 or self.posx > 1024 or self.posy < 0 or self.posy > 1024:
             self.direccion += math.pi
             
+def guardarPersonas():
+    print("guardo a los jugadores")
+    cadena = json.dumps([vars(persona) for persona in personas])
+    print(cadena)
+    
 # Creo una ventana
 raiz = tk.Tk()
 
 # En la ventana creo un lienzo
 lienzo = tk.Canvas(width=1024,height=1024)
 lienzo.pack()
-
+# Boton de guardar
+boton = tk.Button(raiz,text="Guarda",command=guardarPersonas)
+boton.pack()
 # en la coleccion introduzco instncias de personas
 for i in range(0,numeropersonas):
     personas.append(Persona())
